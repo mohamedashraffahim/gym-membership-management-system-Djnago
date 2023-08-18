@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Display</title>
+    <link rel="stylesheet" href="{% static 'templates/css/style.css' %}" />
+  </head>
+  <body>
+    <h1>Cali Gym Management System</h1>
+    <h3>Coaches:
+    <a href="/display/Marwan">Marwan</a>
+    -
+    <a href="/display/Hussein">Hussein</a>
+    -
+    <a href="/display/Tarek">Tarek</a>
+    -
+    <a href="/display/Diaa">Diaa</a>
+    -
+    <a href="/display/Laila">Laila</a>
+    -
+    <a href="/display/Shaher">Shaher</a>
+    <br />
+    <h3>To Add Members: <a href="/add">Add Member</a></h3>
+    <h3>To Search Member by ID:
+    <form action="/search/{{captain}}" method="POST">
+      {% csrf_token %}
+      <input type="text" name="mId" />
+      <input type="submit" value="Search" />
+    </form>
+    </h3>
+    <!--  Displaying the member details -->
+    {% if member %}
+    <h1>Member Details</h1>
+    <table>
+      <tr>
+        <th>Member ID</th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Phone</th>
+        <th>Captain</th>
+        <th></th>
+        <th>Registration Date</th>
+        <th>Expiry Date</th>
+        <th>Paid</th>
+        <th>Active</th>
+        <th>Action</th>
+      </tr>
+      <tr>
+        <td>{{ member.mId }}</td>
+        <td>{{ member.name }}</td>
+        <td>{{ member.age }}</td>
+        <td>{{ member.phone }}</td>
+        <td>{{ member.captain }}</td>
+        <td></td>
+        <td>{{ member.regDate|date:"d-m-Y" }}</td>
+        <td>{{ member.expDate|date:"d-m-Y" }}</td>
+        <td>{{ member.paid }}</td>
+        <td>{{ member.isActive }}</td>
+        <td>
+          <a href="{% url 'renew' member.mId member.captain %}">Renew</a>
+          <a href="{% url 'edit' member.mId member.captain %}">Edit</a>
+          <a href="{% url 'delete' member.mId member.captain %}" onclick="return confirm('Are you sure you want to delete this?')">Delete</a>
+        </td>
+      </tr>
+    </table>
+    {% endif %}
+    <!--  Displaying list of members in Table -->
+    {% if members %}
+    {% if warningList %}
+    <h1>Warning List of C.{{captain}}</h1>
+    <table>
+      <tr>
+        <th>Member ID</th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Phone</th>
+        <th>Captain</th>
+        <th></th>
+        <th>Registration Date</th>
+        <th>Expiry Date</th>
+        <th>Paid</th>
+        <th>Active</th>
+        <th>Action</th>
+      </tr>
+      {% for member in members %}
+      {% if member.captain == captain and member.mId in warningList %}
+      <tr>
+        <td>{{ member.mId }}</td>
+        <td>{{ member.name }}</td>
+        <td>{{ member.age }}</td>
+        <td>{{ member.phone }}</td>
+        <td>{{ member.captain }}</td>
+        <td></td>
+        <td>{{ member.regDate|date:"d-m-Y" }}</td>
+        <td>{{ member.expDate|date:"d-m-Y" }}</td>
+        <td>{{ member.paid }}</td>
+        <td>{{ member.isActive }}</td>
+        <td>
+          <a href="{% url 'renew' member.mId member.captain %}">Renew</a>
+          <a href="{% url 'edit' member.mId member.captain %}">Edit</a>
+          <a href="{% url 'delete' member.mId member.captain %}" onclick="return confirm('Are you sure you want to delete this?')">Delete</a>
+        </td>
+      </tr>
+      {% endif %} 
+      {% endfor %}
+    </table>
+    {% endif %}
+    {% if expList %}
+    <h1>Expired List of C.{{captain}}</h1>
+    <table>
+      <tr>
+        <th>Member ID</th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Phone</th>
+        <th>Captain</th>
+        <th></th>
+        <th>Registration Date</th>
+        <th>Expiry Date</th>
+        <th>Paid</th>
+        <th>Active</th>
+        <th>Action</th>
+      </tr>
+      {% for member in members %}
+      {% if member.captain == captain and member.mId in expList %}
+      <tr>
+        <td>{{ member.mId }}</td>
+        <td>{{ member.name }}</td>
+        <td>{{ member.age }}</td>
+        <td>{{ member.phone }}</td>
+        <td>{{ member.captain }}</td>
+        <td></td>
+        <td>{{ member.regDate|date:"d-m-Y" }}</td>
+        <td>{{ member.expDate|date:"d-m-Y" }}</td>
+        <td>{{ member.paid }}</td>
+        <td>{{ member.isActive }}</td>
+        <td>
+          <a href="{% url 'renew' member.mId member.captain %}">Renew</a>
+          <a href="{% url 'edit' member.mId member.captain %}">Edit</a>
+          <a href="{% url 'delete' member.mId member.captain %}" onclick="return confirm('Are you sure you want to delete this?')">Delete</a>
+        </td>
+      </tr>
+      {% endif %} 
+      {% endfor %}
+    </table>
+    {% endif %}
+    <h1>Main List of C.{{captain}}</h1>
+    <table>
+      <tr>
+        <th>Member ID</th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Phone</th>
+        <th>Captain</th>
+        <th></th>
+        <th>Registration Date</th>
+        <th>Expiry Date</th>
+        <th>Paid</th>
+        <th>Active</th>
+        <th>Action</th>
+      </tr>
+      {% for member in members %}
+      {% if member.captain == captain or not captain %}
+      {% if member.isActive %}
+      <tr>
+        <td>{{ member.mId }}</td>
+        <td>{{ member.name }}</td>
+        <td>{{ member.age }}</td>
+        <td>{{ member.phone }}</td>
+        <td>{{ member.captain }}</td>
+        <td></td>
+        <td>{{ member.regDate|date:"d-m-Y" }}</td>
+        <td>{{ member.expDate|date:"d-m-Y" }}</td>
+        <td>{{ member.paid }}</td>
+        <td>{{ member.isActive }}</td>
+        <td>
+          <a href="{% url 'renew' member.mId  member.captain %}">Renew</a>
+          <a href="{% url 'edit' member.mId member.captain %}">Edit</a>
+          <a href="{% url 'delete' member.mId member.captain %}" onclick="return confirm('Are you sure you want to delete this?')">Delete</a>
+        </td>
+      </tr>
+      {% endif %}
+      {% endif %} 
+      {% endfor %}
+    </table>
+    {% else %}
+    <h1>No members found</h1>
+    {% endif %}
+    <h1>Total of this month: {{ total }} $</h1>
+    <a href="{% url 'deleteTotal' captain %}" onclick="return confirm('Are you sure you want to delete this?')">Delete Total</a>
+  </body>
+</html>
